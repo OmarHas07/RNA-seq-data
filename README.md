@@ -129,25 +129,115 @@ cd $REFD
 
 Second, we will need to identify the exons and splicing sites; we will be using two Python scripts that are commonly used in RNA-Seq data analysis pipelines "extract_splice_sites.py" and "extract_exons.py. These two scripts are included with thte HiSat2 package. 
 
+In addtion to using gffread which converts the annotation file from gff3 to gft format for HiSat to use 
+
 ``` 
 gffread $REF.gff3 -T -o $REF.gtf               
 extract_splice_sites.py $REF.gtf > $REF.ss
 extract_exons.py $REF.gtf > $REF.exon
-
 ```
 
 Finally, creating a HiSat2 index file for the reference genome. 
 
 ```
-
 hisat2-build --ss $REF.ss --exon $REF.exon $REF.fna PodMur_index
-
-
 ``` 
 
 PodMur is going to be the name of my index files; you can change this name to the whatever name you want. After these steps you should see some new files in your reference directory: .exon, .ss and the index files. 
 
 ### Mapping the raw data to the reference genome
 
+All of the steps above were just preparing the files to be used by HiSat2. Now that we created the index, gft files, we will move on to map our data to the reference genome. 
+
+First, move to the directory where our raw data are present
+
+```
+cd $CLEAND
+```
+**Notice: in the cleaned data directory you should have two files for each sample, 1 for the forward, and 2 for the reverse reads. 
+**
+
+Second step is creating a list of all of the fastq files that we need to map. 
+
+``` 
+ls | grep ".fastq" |cut -d "_" -f 1| sort | uniq > list  
+``` 
+This syntax catches all of files that has .fastq using **grep**, and **cut** the underscore from the name, then it only includes one version of the file using **uniq** and outputs the content into a list. 
+
+Thrid, we will need to move the mapping directory, and move the unique ids from the orignal files to map 
+
+```
+cd $MAPD
+mv $CLEAND/list  .
+
+```
+
+#### Next step is creating a while loop to go through all the unique fasta files and map them to the reference genome 
+
+```
+while read i;
+do
+
+  hisat2 -p 6 --dta --phred33       \
+    -x "$REFD"/PodMur_index       \
+    -1 "$CLEAND"/"$i"_1_paired.fastq  -2 "$CLEAND"/"$i"_2_paired.fastq      \
+    -S "$i".sam
+    
+    samtools view -@ 6 -bS "$i".sam > "$i".bam  
+     samtools sort -@ 6  "$i".bam    "$i"_sorted
+      samtools flagstat   "$i"_sorted.bam   > "$i"_Stats.txt
 
 
+    ```
+
+
+The option -p indicates the number of processors that we are going to use, dta reports aligments for later use of StringTie to count data. Sam view converts the SAM files to BAM file, and Sam sort, sorts the BAM file into sorted BAM file which is going to be used later by StringTie for read counts. Then, we creat some stats for about the aligned reads and out put them into stats files. The syntax above might differen a little bit if you're using a local computer. 
+
+After creating the sorted_bam file we are ready to use StringTie to produce the read count file. 
+
+
+### Creating the CSV fiel that contains read counts of the genes 
+
+First, to keep things organized we will move to the count data directory
+
+```
+mkdir "$COUNTSD"/"$i"
+
+```
+
+Second, we will use stringTie to produce the read count
+
+```
+stringtie -p 6 -e -B -G  "$REFD"/"$REF".gtf -o "$COUNTSD"/"$i"/"$i".gtf -l "$i"   "$MAPD"/"$i"_sorted.bam
+
+```
+Finally, we will close the while loop we created
+
+``` 
+done>list 
+```
+
+### Copying the files to the results directory 
+
+We will then only move the files that we are going to look at such as the stats files and the read counts files to the results directory
+
+```
+cp *.txt $RESULTSD
+
+```
+That's to move the stats.txt files to the results directory. 
+
+Then, we will use PrepDe.py script which is also include in the StringTie package to extract read count information from the output StringTie, and creates gene and transcript count matrices in CSV format that can be used for downstream analysis such as differential gene expression, or co-expression analysis. 
+
+``` 
+python /home/$MyID/class_shared/prepDE.py -i $COUNTSD
+
+```
+
+then copy this file to the result directory
+
+```
+cp *.csv $RESULTSD
+
+
+```
