@@ -45,5 +45,5 @@ fastqc -t 6 *paired_trimmed.fastq
 #Copy fastqc output to another directory. 
 
 # Copy FastQC output files to the new directory
-cp *_fastqc.zip $FASTQC_OUTDIR
-cp *_fastqc.html $FASTQC_OUTDIR
+cp *_fastqc.zip $FASTQCRESULTS
+cp *_fastqc.html $FASTQCRESULTS
