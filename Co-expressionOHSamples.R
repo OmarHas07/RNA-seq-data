@@ -27,31 +27,8 @@ head(Metadata)
 dim(Metadata)
 #  142;  7
 
-Baits <- read_csv("Baitgenes.csv")
-head(Baits)
-
-# read in bait genes
-#Baits <- read_delim("Baitgenes.txt", 
-                  #  delim = "\t", escape_double = FALSE, 
-                   # col_names = FALSE, trim_ws = TRUE)
-#head(Baits)
 
 
-# Setting up the major factors in the experiment 
-Metadata %>% 
-  dplyr::group_by(Treatment) %>% 
-  dplyr::count()
-# A tibble: 12 × 12
-
-#Metadata %>% 
-  #dplyr::group_by(replicate()) %>% 
-  #dplyr::count()
-# A tibble: 3 × 2
-
-Metadata %>% 
-  dplyr::group_by(Timepoint) %>% 
-  dplyr::count()
-# A tibble: 35 × 35 x 36 x 36
 
 ## go from wide to tidy format
 Exp_table_long <- Exp_table %>% 
