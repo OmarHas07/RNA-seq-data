@@ -17,7 +17,7 @@ Packages used and the purpose of each of them:
 - Python
 - R 
 
-# Scripts included for the analysing RNA-seq data. 
+# Scripts included for RNA-seq data analysis: 
 There are four scripts in this page;
 
 - the first one is `FASTQC.sh` which assess the quality of the data 
