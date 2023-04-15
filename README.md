@@ -24,6 +24,11 @@ the second is aligment or mapping to the reference genome and gene count, the th
 
 ### Quality Control 
 
+
+![Error percentage FASTQC](Control_R1T2_Error.png)
+
+
+
 Usually we assess the quality of the raw reads before doing any trimming step, and then run fastqc once again to compared the quality before and after trimming. The fastqc is modified in a way to make it easy to run one more time on the trimmed reads, you just have to change the path and the variables. 
 
 ``` 
@@ -37,6 +42,8 @@ echo "Script completed."
 
 ```
 
+
+
 After unziping the tar.gz file you would expect to have have a .gz file and HTML file, the HTML file will include the the qulaity of the reads, it will include different factors used to assess the qualtiy of the data, such as GC content, phred quality, and error rate. 
 
 ### Mapping and gene count 
@@ -44,6 +51,8 @@ After unziping the tar.gz file you would expect to have have a .gz file and HTML
 As well as the other scripts in this respirtory, the script is soft coded and includes echo commands across different stages of the script to let you know the progress of the job. 
 
 The parameters in the code below can be changed based on the computer you're running the script on, after completing this Hisat step and giving you this message "Copying files to results directory..." You would expect to set of bam, sam, and stat files in your result directory and you would see the count_gene_matrix.csv file which we will use in the R for the co-expression analysis
+
+
 
 ```
 # Loop through all unique FASTQ files and map them to the reference genome
@@ -66,6 +75,10 @@ echo "Copying files to results directory..."
 
 The end goal is to create a heatmap of the modules there is a detailed annotation in the script to help you change the variables based on your data. This script also includes making PCA graphs, you can make any comparisions you want based on the input data file, I compared treatments in seperate time points, or comparing the same treatment in different time point. Obviously based on the purpose of your research. 
 
+
+![Co-Expression HeatMap](module_heatmap.png)
+
+
 You  can determine the set of colors of the PCA plot using brewer.pal but because I have more than 8 inputs which I am not using it. The parameter in this code is the Group, you can replace "Group" to any other parameter in your metadata. 
 ```
 PCA_by_Group <- PCA_coord %>% 
@@ -85,8 +98,10 @@ PCA_by_Group <- PCA_coord %>%
 PCA_by_Group
 
 
+
 ```
 
+![PCA By Group](PCA_by_Group.png)
 
 
 # References
