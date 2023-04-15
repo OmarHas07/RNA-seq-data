@@ -50,7 +50,7 @@ echo "Script completed."
 
 After unziping the tar.gz file you would expect to have have a .gz file and HTML file, the HTML file will include the the qulaity of the reads, it will include different factors used to assess the qualtiy of the data, such as GC content, phred quality, and error rate. 
 
-### Mapping and gene count 
+## Mapping and gene count 
 
 As well as the other scripts in this respirtory, the script is soft coded and includes echo commands across different stages of the script to let you know the progress of the job. 
 
@@ -74,7 +74,7 @@ echo "Copying files to results directory..."
 
 ```
 
-### Co-expression analysis
+## Co-expression analysis
 
 The end goal is to create a heatmap of the modules there is a detailed annotation in the script to help you change the variables based on your data. This script also includes making PCA graphs, you can make any comparisions you want based on the input data file, I compared treatments in seperate time points, or comparing the same treatment in different time point. Obviously based on the purpose of your research. 
 
