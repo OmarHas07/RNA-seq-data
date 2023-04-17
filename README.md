@@ -29,7 +29,7 @@ There are four scripts in this page;
 ## Quality Control 
 
 
-![Error percentage FASTQC](Control_R1T2_Error.png)
+![Error percentage FASTQC](images/Control_R1T2_Error.png)
 
 
 
@@ -79,7 +79,7 @@ echo "Copying files to results directory..."
 The end goal is to create a heatmap of the modules there is a detailed annotation in the script to help you change the variables based on your data. This script also includes making PCA graphs, you can make any comparisions you want based on the input data file, I compared treatments in seperate time points, or comparing the same treatment in different time point. Obviously based on the purpose of your research. 
 
 
-![Co-Expression HeatMap](module_heatmap.png)
+![Co-Expression HeatMap](images/module_heatmap.png)
 
 
 You  can determine the set of colors of the PCA plot using brewer.pal but because I have more than 8 inputs which I am not using it. The parameter in this code is the Group, you can replace "Group" to any other parameter in your metadata. 
@@ -104,7 +104,7 @@ PCA_by_Group
 
 ```
 
-![PCA By Group](PCA_by_Group.png)
+![PCA By Group](images/PCA_by_Group.png)
 
 
 # References
